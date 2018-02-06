@@ -110,6 +110,7 @@ uploadArchives {
                 authentication(credentials)
             }
             pom.project {
+                name 'JDK Clock Factories'
                 description 'Discoverable factories for configuring a JDK Clock'
                 url "https://github.com/energizedwork/${project.name}"
                 licenses {
