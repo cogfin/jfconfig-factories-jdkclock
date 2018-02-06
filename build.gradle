@@ -1,0 +1,149 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.adaptc.gradle:nexus-workflow:0.6'
+    }
+}
+
+plugins {
+    id 'io.spring.dependency-management' version "1.0.3.RELEASE"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'groovy'
+apply plugin: 'signing'
+apply plugin: 'nexus-workflow'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "io.dropwizard:dropwizard-bom:1.2.2"
+    }
+}
+
+configurations {
+    javadocs
+    sources
+}
+
+dependencies {
+    api 'io.dropwizard:dropwizard-configuration'
+    api 'io.dropwizard:dropwizard-jackson'
+    api 'io.dropwizard:dropwizard-jersey'
+    api 'javax.validation:validation-api:1.1.0.Final'
+
+    testImplementation 'org.codehaus.groovy:groovy-all:2.4.12'
+    testImplementation 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testImplementation 'io.dropwizard:dropwizard-core'
+}
+
+task doc(type: Javadoc) {
+    source = sourceSets.main.allJava
+    classpath = sourceSets.main.output + sourceSets.main.compileClasspath
+    options {
+        linksOffline 'http://docs.oracle.com/javase/8/docs/api/', 'src/doc/javadoc-packages/jdk/'
+        linksOffline 'https://docs.oracle.com/javaee/7/api/', 'src/doc/javadoc-packages/jee/'
+        linksOffline 'http://www.dropwizard.io/1.2.0/dropwizard-configuration/apidocs/', 'src/doc/javadoc-packages/dropwizard-configuration/'
+        linksOffline 'http://www.dropwizard.io/1.2.0/dropwizard-jackson/apidocs/', 'src/doc/javadoc-packages/dropwizard-jackson/'
+        linksOffline 'http://www.dropwizard.io/1.2.0/dropwizard-jersey/apidocs/', 'src/doc/javadoc-packages/dropwizard-jersey/'
+        linksOffline 'https://fasterxml.github.io/jackson-databind/javadoc/2.7/', 'src/doc/javadoc-packages/jackson/'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.java
+}
+
+task javadocsJar(type: Jar, dependsOn: ['doc']) {
+    classifier = 'javadoc'
+    from doc.destinationDir
+}
+
+artifacts {
+    javadocs javadocsJar
+    sources sourcesJar
+    archives sourcesJar, javadocsJar
+}
+
+signing {
+    boolean shouldSign = Boolean.parseBoolean(project.properties.doSigning)
+    if (!shouldSign) {
+        if (project.hasProperty('signing.keyId')) {
+            // remove keyId as may be set in ~/gradle/gradle.properties and signing will be attempted if have key!
+            project.setProperty('signing.keyId', null)
+        }
+    } else {
+        if (!project.getProperty('signing.secretKeyRingFile')) {
+            // if using gpg2 > 2.1 then
+            // gpg2 --export-secret-key <keyID> > ~/.gnupg/secring.gpg
+            project.setProperty('signing.secretKeyRingFile', "${System.getProperty('user.home')}/.gnupg/secring.gpg")
+        }
+    }
+    required {
+        shouldSign
+    }
+    sign configurations.archives
+}
+
+uploadArchives {
+    def doNexusUpload = Boolean.parseBoolean(deployNexus)
+    def credentials = [
+        userName: project.properties.nexusUsername,
+        password: project.properties.nexusPassword,
+    ]
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: doNexusUpload ? nexusRepo : testRepo) {
+                authentication(credentials)
+            }
+            snapshotRepository(url: doNexusUpload ? nexusSnapshotRepo : testSnapshotRepo) {
+                authentication(credentials)
+            }
+            pom.project {
+                description 'Discoverable factories for configuring a JDK Clock'
+                url "https://github.com/energizedwork/${project.name}"
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'http://www.opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        name 'Anthony Robinson'
+                        email 'tony@energizedwork.com'
+                        organization = 'Energized Work'
+                        organizationUrl 'https://www.energizedwork.com/'
+                    }
+                }
+                scm {
+                    connection "scm:git:git://github.com/energizedwork/${project.name}"
+                    developerConnection "scm:git:ssh://github.com:energizedwork/${project.name}"
+                    url "https://github.com/energizedwork/${project.name}"
+                }
+            }
+        }
+    }
+}
+
+publishing.publications {
+    sources(MavenPublication) {
+        from components.java
+        artifact sourcesJar
+    }
+    javadoc(MavenPublication) {
+        from components.java
+        artifact javadocsJar
+    }
+}
