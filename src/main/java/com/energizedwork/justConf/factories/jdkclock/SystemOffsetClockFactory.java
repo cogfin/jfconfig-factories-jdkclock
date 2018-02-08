@@ -6,11 +6,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import javax.validation.constraints.NotNull;
 import java.time.Clock;
 import java.time.Duration;
-import java.time.ZoneId;
 
+/**
+ * Create a system Clock offset by the configured duration
+ */
 @JsonTypeName("system-offset")
 public class SystemOffsetClockFactory extends ClockFactory {
 
+    /**
+     * the Duration to use to offset the system clock
+     */
     @NotNull
     public Duration offset;
 

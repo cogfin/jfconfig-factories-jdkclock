@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.time.Clock;
 
+/**
+ * Create a system Clock in the configured time zone
+ */
 @JsonTypeName("system")
 public class SystemClockFactory extends ClockFactory {
 
