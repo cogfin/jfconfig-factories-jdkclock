@@ -1,5 +1,7 @@
 # JFConfig factories for the Java 8 Clock
 
+Dropwizard Discoverable configuration factories that do not require, but can be used with [JFConfig](https://github.com/energizedwork/justConf)
+
 All ClockFactory implementations will return a Clock with the time zone set by the zoneId configuration property.
 When the zoneId property is null the clock will use the system default time zone.
 
