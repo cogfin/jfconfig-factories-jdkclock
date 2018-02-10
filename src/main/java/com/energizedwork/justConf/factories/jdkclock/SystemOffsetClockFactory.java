@@ -3,7 +3,6 @@ package com.energizedwork.justConf.factories.jdkclock;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.validation.constraints.NotNull;
 import java.time.Clock;
 import java.time.Duration;
 
@@ -14,15 +13,16 @@ import java.time.Duration;
 public class SystemOffsetClockFactory extends ClockFactory {
 
     /**
-     * the Duration to use to offset the system clock
+     * the Duration to use to offset the system clock.
+     *
+     * <p>when null, a system clock will be returned with no offset</p>
      */
-    @NotNull
     public Duration offset;
 
     @Override
     @JsonIgnore
     public Clock createClock() {
-        return Clock.offset(Clock.system(getResovedZoneId()), offset);
+        return offset == null ? Clock.system(getResovedZoneId()) : Clock.offset(Clock.system(getResovedZoneId()), offset);
     }
 
 }

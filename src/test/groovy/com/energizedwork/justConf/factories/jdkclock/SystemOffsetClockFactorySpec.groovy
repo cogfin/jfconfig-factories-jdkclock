@@ -20,4 +20,15 @@ class SystemOffsetClockFactorySpec extends BaseClockFactorySpec {
             (clock.millis() - currentTimeMillis() - sixHoursInMillis).abs() < testTolerance
     }
 
+    def "a null duration will return a system clock with no offset"() {
+        given:
+        String zone = 'Indian/Christmas'
+        assert defaultTimeZone != TimeZone.getTimeZone(zone)
+        Clock clock = new SystemOffsetClockFactory(zoneId: zone).createClock()
+
+        expect:
+        clock.zone.toString() == zone
+        (clock.millis() - currentTimeMillis()).abs() < testTolerance
+    }
+
 }
