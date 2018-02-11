@@ -37,8 +37,7 @@ class SystemOffsetClockFactorySpec extends BaseClockFactorySpec {
         given:
             def fiveHoursFromNow = Instant.now().plus(5, HOURS)
             long fiveHoursInMillis = hoursToMillis(5)
-            def fixed = new FixableClockFactory(instant: fiveHoursFromNow.toString())
-            Clock clock = new SystemOffsetClockFactory(fixableClockFactory: fixed).createClock()
+            Clock clock = new SystemOffsetClockFactory(instant: fiveHoursFromNow.toString()).createClock()
 
         expect:
             long millis = clock.millis()

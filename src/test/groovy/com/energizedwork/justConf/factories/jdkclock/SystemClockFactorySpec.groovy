@@ -1,9 +1,6 @@
 package com.energizedwork.justConf.factories.jdkclock
 
-import spock.lang.Specification
-
 import java.time.Clock
-import java.time.ZoneId
 
 import static java.lang.System.currentTimeMillis
 
