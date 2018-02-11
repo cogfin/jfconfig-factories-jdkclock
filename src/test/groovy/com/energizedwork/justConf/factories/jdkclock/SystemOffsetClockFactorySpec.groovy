@@ -2,8 +2,10 @@ package com.energizedwork.justConf.factories.jdkclock
 
 import java.time.Clock
 import java.time.Duration
+import java.time.Instant
 
 import static java.lang.System.currentTimeMillis
+import static java.time.temporal.ChronoUnit.HOURS
 
 class SystemOffsetClockFactorySpec extends BaseClockFactorySpec {
 
@@ -11,7 +13,7 @@ class SystemOffsetClockFactorySpec extends BaseClockFactorySpec {
         given:
             String zone = 'Pacific/Easter'
             Duration sixHours = Duration.ofHours(6)
-            long sixHoursInMillis = 6 * 3600 * 1000;
+            long sixHoursInMillis = hoursToMillis(6)
             assert defaultTimeZone != TimeZone.getTimeZone(zone)
             Clock clock = new SystemOffsetClockFactory(zoneId: zone, offset: sixHours).createClock()
 
@@ -29,6 +31,24 @@ class SystemOffsetClockFactorySpec extends BaseClockFactorySpec {
         expect:
         clock.zone.toString() == zone
         (clock.millis() - currentTimeMillis()).abs() < testTolerance
+    }
+
+    def "allow the offset duration to be calculated from a fixed point in time"() {
+        given:
+            def fiveHoursFromNow = Instant.now().plus(5, HOURS)
+            long fiveHoursInMillis = hoursToMillis(5)
+            def fixed = new FixableClockFactory(instant: fiveHoursFromNow.toString())
+            Clock clock = new SystemOffsetClockFactory(fixableClockFactory: fixed).createClock()
+
+        expect:
+            long millis = clock.millis()
+            (millis - currentTimeMillis() - fiveHoursInMillis).abs() < testTolerance
+            sleep(5)
+            clock.millis() > millis
+    }
+
+    long hoursToMillis(int hours) {
+        hours * 3600 * 1000;
     }
 
 }

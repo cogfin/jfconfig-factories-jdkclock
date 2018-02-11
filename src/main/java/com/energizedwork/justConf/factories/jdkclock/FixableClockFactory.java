@@ -47,20 +47,24 @@ public class FixableClockFactory extends ClockFactory {
         if (instant == null) {
             return Clock.system(zoneId);
         } else {
-            TemporalAccessor fixedTime;
-            if (format == null) {
-                fixedTime = DateTimeFormatter.ISO_INSTANT.parse(instant);
-            } else {
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern(format).toFormatter();//.withZone(ZoneId.of("UTC"));
-                fixedTime = formatter.parseBest(instant, Instant::from, LocalDateTime::from, LocalDate::from);
-                if (fixedTime instanceof LocalDateTime) {
-                    fixedTime = ZonedDateTime.of((LocalDateTime)fixedTime, localTimeIsUtc ? ZoneId.of("UTC") : zoneId);
-                } else if (fixedTime instanceof LocalDate) {
-                    fixedTime = ZonedDateTime.of((LocalDate)fixedTime, LocalTime.MIDNIGHT, localTimeIsUtc ? ZoneId.of("UTC") : zoneId);
-                }
-            }
-            return Clock.fixed(Instant.from(fixedTime), zoneId);
+            return Clock.fixed(getParsedInstant(zoneId), zoneId);
         }
+    }
+
+    protected Instant getParsedInstant(ZoneId zoneId) {
+        TemporalAccessor fixedTime;
+        if (format == null) {
+            fixedTime = DateTimeFormatter.ISO_INSTANT.parse(instant);
+        } else {
+            DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern(format).toFormatter();
+            fixedTime = formatter.parseBest(instant, Instant::from, LocalDateTime::from, LocalDate::from);
+            if (fixedTime instanceof LocalDateTime) {
+                fixedTime = ZonedDateTime.of((LocalDateTime)fixedTime, localTimeIsUtc ? ZoneId.of("UTC") : zoneId);
+            } else if (fixedTime instanceof LocalDate) {
+                fixedTime = ZonedDateTime.of((LocalDate)fixedTime, LocalTime.MIDNIGHT, localTimeIsUtc ? ZoneId.of("UTC") : zoneId);
+            }
+        }
+        return Instant.from(fixedTime);
     }
 
 }
