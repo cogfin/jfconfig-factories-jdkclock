@@ -1,4 +1,6 @@
-package com.energizedwork.justConf.factories.jdkclock;
+package com.energizedwork.justConf.factories.jdkclock.support;
+
+import com.energizedwork.justConf.factories.jdkclock.ClockFactory;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

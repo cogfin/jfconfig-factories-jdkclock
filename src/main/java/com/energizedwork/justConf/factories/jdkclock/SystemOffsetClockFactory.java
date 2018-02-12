@@ -1,5 +1,6 @@
 package com.energizedwork.justConf.factories.jdkclock;
 
+import com.energizedwork.justConf.factories.jdkclock.support.AbstractInstantClockFactory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
