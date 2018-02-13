@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.Clock;
 
 /**
@@ -15,6 +16,14 @@ import java.time.Clock;
  */
 @JsonTypeName("mutable")
 public class MutableClockFactory extends ClockFactory {
+
+    /**
+     * zoneId must be null
+     *
+     * <p>the timezone will be set by the initialClockFactory but can be overriden with {@link MutableClock#setClock(Clock)}</p>
+     */
+    @Null
+    public String zoneId;
 
     /**
      * provide the initial clock for the mutable clock
