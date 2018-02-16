@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) [![Javadocs](https://www.javadoc.io/badge/com.energizedwork/jfconfig-factories-jdkclock.svg)](https://www.javadoc.io/doc/com.energizedwork/jfconfig-factories-jdkclock) [![Maven](https://maven-badges.herokuapp.com/maven-central/com.energizedwork/jfconfig-factories-jdkclock/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.energizedwork/jfconfig-factories-jdkclock)
+
 # JFConfig factories for the Java 8 Clock
 
 Dropwizard Discoverable configuration factories that do not require, but can be used with [JFConfig](https://github.com/energizedwork/justConf)
