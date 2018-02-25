@@ -15,7 +15,6 @@ import java.time.*;
 public class FixableClockFactory extends AbstractInstantClockFactory {
 
     @Override
-    @JsonIgnore
     public Clock createClock() {
         ZoneId zoneId = getResovedZoneId();
         if (instant == null) {

@@ -41,7 +41,6 @@ public abstract class ClockFactory implements Discoverable {
      * a Clock with the configured time zone
      * @return a Clock with the configured time zone
      */
-    @JsonIgnore
     public abstract Clock createClock();
 
 }

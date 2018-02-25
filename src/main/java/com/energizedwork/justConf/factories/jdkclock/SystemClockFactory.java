@@ -12,7 +12,6 @@ import java.time.Clock;
 public class SystemClockFactory extends ClockFactory {
 
     @Override
-    @JsonIgnore
     public Clock createClock() {
         return Clock.system(getResovedZoneId());
     }

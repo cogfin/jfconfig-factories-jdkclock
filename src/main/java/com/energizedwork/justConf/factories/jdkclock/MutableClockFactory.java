@@ -38,7 +38,6 @@ public class MutableClockFactory extends ClockFactory {
      * @return a {@link MutableClock}
      */
     @Override
-    @JsonIgnore
     public Clock createClock() {
         return new MutableClock(initialClockFactory.createClock());
     }

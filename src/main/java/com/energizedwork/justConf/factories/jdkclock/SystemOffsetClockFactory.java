@@ -41,7 +41,6 @@ public class SystemOffsetClockFactory extends AbstractInstantClockFactory {
      * @return a system clock
      */
     @Override
-    @JsonIgnore
     public Clock createClock() {
         ZoneId zoneId = getResovedZoneId();
         if (instant != null) {
