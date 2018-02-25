@@ -45,6 +45,7 @@ dependencies {
     testImplementation 'org.codehaus.groovy:groovy-all:2.4.12'
     testImplementation 'org.spockframework:spock-core:1.0-groovy-2.4'
     testImplementation 'io.dropwizard:dropwizard-core'
+    testImplementation 'com.energizedwork:jfconfig:4.1.0'
 }
 
 task doc(type: Javadoc) {

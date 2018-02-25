@@ -1,0 +1,5 @@
+---
+clockFactory:
+  type: mutable
+  initialClockFactory:
+    type: system
