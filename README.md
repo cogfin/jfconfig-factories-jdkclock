@@ -12,14 +12,16 @@ When the zoneId property is null the clock will use the system default time zone
 
 ## Examples
 
-### Use a system clock in the local time zone in production
+### System clock (type: system)
+
+#### Use a system clock in the local time zone in production
 ###### config/env/production.yml
 ```yaml
 clockFactory:
     type: system
 ```
 
-### Use a system clock in a set time zone in production
+#### Use a system clock in a set time zone in production
 ###### config/env/production.yml
 ```yaml
 clockFactory:
@@ -27,10 +29,11 @@ clockFactory:
     zoneId: UTC
 ```
 
-### Use a fixable clock in qa environment
+### Clocks for testing
 
-The FixableClockFactory is used to easily switch between a "normal" system clock and a fixed clock that can be used to test time dependent
-functionality.
+#### Fixable clock (type: fixable)
+
+The FixableClockFactory is used to easily switch between a "normal" system clock and a fixed clock
 
 When environemt variable FIX_TIME is not set, the clockFactory will return a normal system clock in the Paris time zone
 Setting FIX_TIME to 2018-02-08 08:05 will fix the clock to that local time (2018-02-08 07:05 UTC)
@@ -57,4 +60,56 @@ clockFactory:
     instant: ${FIX_TIME:-}
     format: ${FIX_TIME_FORMAT:-yyyy-MM-dd HH:mm}
     zoneId: ${FIX_TIME_ZONE:-}
+```
+
+#### System offset (type: system-offset)
+
+Return a system clock offset by the configured duration.
+
+When an instant is configured (as above for the fixable factory) the offset is calculated as the difference between the instant and the system clock.
+This means that the clock returned will initially be set to the configured instant and then keep ticking.
+
+When instant is configured the duration is ignored.
+
+##### A system clock offset by 48 hours
+###### config/env/demo.yml
+```yaml
+clockFactory:
+    type: system-offset
+    offset: P2D
+```
+
+##### A system clock which when requested is initially offset to 2018-06-30 02:55 UTC 
+###### config/env/demo.yml
+```yaml
+clockFactory:
+    type: system-offset
+    instant: 2018-06-30 03:55
+    format: yyyy-MM-dd HH:mm
+    zoneId: Europe/London
+```
+
+Use environment variables to choose between a system clock (OFFSET_DURATION and INITIAL_TIME both unset or empty), a clock offset by a duration, or a clock which is initially set to a specific instant in time
+###### config/env/demo.yml
+```yaml
+clockFactory:
+    type: system-offset
+    offset: ${OFFSET_DURATION:-}
+    instant: ${INITIAL_TIME:-}
+    format: ${INITIAL_TIME_FORMAT:-yyyy-MM-dd HH:mm}
+    zoneId: ${TIME_ZONE:-}
+```
+
+#### Mutable clock (type: mutable)
+
+The [MutableClock](https://javadoc.io/page/com.energizedwork/jfconfig-factories-jdkclock/latest/com/energizedwork/justConf/factories/jdkclock/clocks/MutableClock.html) returned from this factory delegates all calls to an underlying clock which can be swapped out using methods on the MutableClock.
+
+The initial delegate clock is set by providing a ClockFactory and can be restored by calling reset() on the MutableClock.
+
+```yaml
+clockFactory:
+    type: mutable
+      initialClockFactory:
+        type: system
+        zoneId: UTC
 ```
