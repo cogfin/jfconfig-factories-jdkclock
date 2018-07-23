@@ -136,6 +136,12 @@ uploadArchives {
                     developerConnection "scm:git:ssh://github.com:energizedwork/${project.name}"
                     url "https://github.com/energizedwork/${project.name}"
                 }
+                distributionManagement {
+                    relocation {
+                        groupId 'uk.cogfin'
+                        version '1.0.0'
+                    }
+                }
             }
         }
     }
