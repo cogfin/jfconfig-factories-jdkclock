@@ -8,6 +8,9 @@ import java.time.temporal.TemporalAmount;
 
 /**
  * A mutable clock suitable for testing
+ *
+ * <p><strong>This clock is not thread safe.</strong> To prevent significant performance impact this clock is not thread safe.</p>
+ * <p>If any thread accesses this clock whilst the clock is being mutated the results are undefined</p>
  */
 public class MutableClock extends Clock {
 
