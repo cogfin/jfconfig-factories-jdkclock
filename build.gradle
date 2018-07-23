@@ -45,7 +45,7 @@ dependencies {
     testImplementation 'org.codehaus.groovy:groovy-all:2.4.12'
     testImplementation 'org.spockframework:spock-core:1.0-groovy-2.4'
     testImplementation 'io.dropwizard:dropwizard-core'
-    testImplementation 'com.energizedwork:jfconfig:4.1.0'
+    testImplementation 'uk.cogfin:jfconfig:4.1.2'
 }
 
 task doc(type: Javadoc) {
@@ -115,7 +115,7 @@ uploadArchives {
             pom.project {
                 name 'JDK Clock Factories'
                 description 'Discoverable factories for configuring a JDK Clock'
-                url "https://github.com/energizedwork/${project.name}"
+                url "https://github.com/cogfin/${project.name}"
                 licenses {
                     license {
                         name 'The MIT License'
@@ -125,22 +125,16 @@ uploadArchives {
                 }
                 developers {
                     developer {
-                        name 'Anthony Robinson'
-                        email 'tony@energizedwork.com'
-                        organization = 'Energized Work'
-                        organizationUrl 'https://www.energizedwork.com/'
+                        name 'Cogfin Dev'
+                        email 'gh@cogfin.uk'
+                        organization = 'Cogfin'
+                        organizationUrl 'https://github.com/cogfin'
                     }
                 }
                 scm {
-                    connection "scm:git:git://github.com/energizedwork/${project.name}"
-                    developerConnection "scm:git:ssh://github.com:energizedwork/${project.name}"
-                    url "https://github.com/energizedwork/${project.name}"
-                }
-                distributionManagement {
-                    relocation {
-                        groupId 'uk.cogfin'
-                        version '1.0.0'
-                    }
+                    connection "scm:git:git://github.com/cogfin/${project.name}"
+                    developerConnection "scm:git:ssh://github.com:cogfin/${project.name}"
+                    url "https://github.com/cogfin/${project.name}"
                 }
             }
         }
